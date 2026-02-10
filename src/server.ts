@@ -42,6 +42,7 @@ const renderPage = () => {
         <span class="dot yellow"></span>
         <span class="dot green"></span>
       </div>
+
       <p>links@portfolio:~$ cat profile.txt</p>
     </header>
 
