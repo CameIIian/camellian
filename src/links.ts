@@ -7,27 +7,32 @@ export type LinkItem = {
 export const links: LinkItem[] = [
   {
     name: "X (Twitter)",
-    url: "https://x.com",
-    description: "最新の投稿やお知らせをチェック"
+    url: "https://x.com/Camellian_vrc",
+    description: "VRCと日常の呟きをしたい"
+  },
+  {
+    name: "VRC用Discordサーバ",
+    url: "https://discord.gg/8UyG4hSBQk",
+    description: "作って満足してた, 入りたい人はご自由に"
+  },
+  {
+    name: "VRChat",
+    url: "https://vrchat.com/home/user/usr_4670a8db-aa65-4b1f-b630-71c66ad0f397",
+    description: "会って話してくれる人はここからどうぞ"
   },
   {
     name: "GitHub",
-    url: "https://github.com",
-    description: "コードやプロジェクトを公開"
-  },
-  {
-    name: "Qiita",
-    url: "https://qiita.com",
-    description: "技術記事の投稿先"
-  },
-  {
-    name: "Zenn",
-    url: "https://zenn.dev",
-    description: "知見の共有・記事管理"
+    url: "https://github.com/CameIIian",
+    description: "電子物置, 役に立ったり立たなかったりするものがある"
   },
   {
     name: "YouTube",
-    url: "https://www.youtube.com",
-    description: "動画コンテンツの配信"
+    url: "https://www.youtube.com/@camellian_archive/videos",
+    description: "変なもの作ってた頃の名残, YTmusic用"
+  },
+  {
+    name: "niconico",
+    url: "https://www.nicovideo.jp/user/118861311/video",
+    description: "変なもの作ってた頃のメインストリーム"
   }
 ];
