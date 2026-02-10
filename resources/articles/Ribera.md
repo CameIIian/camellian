@@ -6,6 +6,7 @@ Tag: VRChat, 改変
 	https://vr-nmzw.fanbox.cc/posts/10800110
 ## 準備するもの (特筆すべきもののみ)
 - ボクの.alcomtemplateに含まれるパッケージと.alcomtemplate
+	https://github.com/CameIIian/dotfiles
 - Riberaちゃん
 	https://ensuiuni.booth.pm/items/6253733
 ## やること
