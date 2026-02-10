@@ -212,6 +212,14 @@ strong {
   background: rgba(40, 42, 54, 0.55);
 }
 
+.articles-content .markdown-article {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
 .markdown-article h1,
 .markdown-article h2,
 .markdown-article h3,
