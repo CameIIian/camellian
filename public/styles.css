@@ -19,21 +19,18 @@
 body {
   margin: 0;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
   font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
   background: radial-gradient(circle at top right, #44475a 0%, var(--bg) 50%);
   color: var(--text);
-  padding: 24px;
 }
 
 .terminal {
-  width: min(900px, 100%);
+  width: 100%;
+  min-height: 100vh;
   background: var(--surface);
   border: 1px solid #44475a;
-  border-radius: 10px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .terminal-header {
@@ -43,6 +40,38 @@ body {
   padding: 12px 16px;
   background: #191a21;
   border-bottom: 1px solid #44475a;
+}
+
+.tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 16px;
+  background: #1d1f2b;
+  border-bottom: 1px solid #44475a;
+}
+
+.tab-item {
+  color: var(--comment);
+  text-decoration: none;
+  text-transform: lowercase;
+  padding: 10px 14px;
+  border-top: 2px solid transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+}
+
+.tab-item:hover {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.tab-item.is-active {
+  color: var(--text);
+  border-top-color: var(--purple);
+  border-left-color: #44475a;
+  border-right-color: #44475a;
+  background: rgba(40, 42, 54, 0.65);
 }
 
 .terminal-header p {
@@ -77,6 +106,7 @@ body {
 .terminal-body {
   padding: 20px;
   line-height: 1.8;
+  flex: 1;
 }
 
 .title {
@@ -157,6 +187,11 @@ a:hover {
 
 strong {
   color: var(--yellow);
+}
+
+.empty-message {
+  margin: 0 0 14px;
+  color: var(--comment);
 }
 
 @media (max-width: 640px) {
