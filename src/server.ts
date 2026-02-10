@@ -445,7 +445,7 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
       </section>
       <p class="prompt">root@camellian:~$ cat contributions</p>
       ${contributionsContent}
-`
+      <p class="prompt">root@camellian:~$ _</p>`
       : `
       ${renderArticlesWorkspace()}
 `;
