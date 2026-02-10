@@ -1,5 +1,7 @@
 # はじめての記事
 
+Tags: intro, markdown, dracula
+
 `resources/articles` に置いた Markdown を、このページでそのまま読めるようにしました。
 
 ## できること
