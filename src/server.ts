@@ -330,8 +330,6 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
 
     <section class="terminal-body">
       ${tabContent}
-
-      <p class="prompt">root@camellian:~$ _</p>
     </section>
   </main>
 </body>
