@@ -249,7 +249,11 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
   const list = articles
     .map(
       (article, index) => `
-      <li class="article-nav-item ${article.slug === activeSlug ? "is-selected" : ""}">
+      <li
+        class="article-nav-item ${article.slug === activeSlug ? "is-selected" : ""}"
+        data-title="${escapeHtml(article.title.toLowerCase())}"
+        data-tags="${escapeHtml(article.tags.join(",").toLowerCase())}"
+      >
         <a href="/articles/${article.slug}" class="article-nav-link">
           <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
           <span class="article-nav-main">
@@ -261,6 +265,19 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
           </span>
         </a>
       </li>`
+    )
+    .join("\n");
+
+  const availableTags = Array.from(new Set(articles.flatMap((article) => article.tags))).sort((a, b) =>
+    a.localeCompare(b, "ja")
+  );
+
+  const tagsFilter = availableTags
+    .map(
+      (tag) =>
+        `<button type="button" class="article-filter-tag" data-filter-tag="${escapeHtml(
+          tag.toLowerCase()
+        )}">${escapeHtml(tag)}</button>`
     )
     .join("\n");
 
@@ -277,12 +294,78 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
   return `
     <section class="articles-workspace">
       <aside class="articles-sidebar">
+        <div class="article-filter-panel">
+          <label for="article-search" class="article-filter-label">search</label>
+          <input
+            id="article-search"
+            class="article-search-input"
+            type="search"
+            placeholder="タイトルで検索..."
+            autocomplete="off"
+          />
+          <p class="article-filter-label">tags</p>
+          <div class="article-filter-tags">
+            <button type="button" class="article-filter-tag is-active" data-filter-tag="all">all</button>
+            ${tagsFilter}
+          </div>
+          <p class="article-filter-summary" id="article-filter-summary">${articles.length} 件表示中</p>
+        </div>
         <ul class="article-nav-list">${list}\n</ul>
       </aside>
       <section class="articles-content">
         ${articleView}
       </section>
     </section>
+    <script>
+      (() => {
+        const searchInput = document.querySelector("#article-search");
+        const tagButtons = Array.from(document.querySelectorAll(".article-filter-tag"));
+        const articleItems = Array.from(document.querySelectorAll(".article-nav-item"));
+        const summary = document.querySelector("#article-filter-summary");
+
+        if (!searchInput || tagButtons.length === 0 || articleItems.length === 0 || !summary) {
+          return;
+        }
+
+        let activeTag = "all";
+
+        const applyFilter = () => {
+          const query = searchInput.value.trim().toLowerCase();
+          let visibleCount = 0;
+
+          articleItems.forEach((item) => {
+            const title = item.getAttribute("data-title") ?? "";
+            const tags = (item.getAttribute("data-tags") ?? "").split(",").filter(Boolean);
+            const matchesQuery = query.length === 0 || title.includes(query);
+            const matchesTag = activeTag === "all" || tags.includes(activeTag);
+            const isVisible = matchesQuery && matchesTag;
+
+            item.style.display = isVisible ? "" : "none";
+            if (isVisible) {
+              visibleCount += 1;
+            }
+          });
+
+          summary.textContent = visibleCount + " 件表示中";
+        };
+
+        searchInput.addEventListener("input", applyFilter);
+
+        tagButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            activeTag = button.getAttribute("data-filter-tag") ?? "all";
+
+            tagButtons.forEach((otherButton) => {
+              otherButton.classList.toggle("is-active", otherButton === button);
+            });
+
+            applyFilter();
+          });
+        });
+
+        applyFilter();
+      })();
+    </script>
   `;
 };
 

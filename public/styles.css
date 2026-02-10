@@ -271,6 +271,75 @@ strong {
   background: rgba(25, 26, 33, 0.85);
 }
 
+
+.article-filter-panel {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 10px;
+  border: 1px solid rgba(98, 114, 164, 0.45);
+  border-radius: 8px;
+  background: rgba(40, 42, 54, 0.55);
+}
+
+.article-filter-label {
+  margin: 0;
+  color: var(--purple);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.article-search-input {
+  width: 100%;
+  border: 1px solid #44475a;
+  border-radius: 6px;
+  background: #1a1c28;
+  color: var(--text);
+  padding: 8px 10px;
+  font: inherit;
+}
+
+.article-search-input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(139, 233, 253, 0.2);
+}
+
+.article-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.article-filter-tag {
+  border: 1px solid rgba(98, 114, 164, 0.55);
+  border-radius: 999px;
+  background: rgba(25, 26, 33, 0.95);
+  color: var(--comment);
+  padding: 4px 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.article-filter-tag:hover {
+  color: var(--cyan);
+  border-color: rgba(139, 233, 253, 0.55);
+}
+
+.article-filter-tag.is-active {
+  color: var(--bg);
+  background: var(--purple);
+  border-color: var(--purple);
+}
+
+.article-filter-summary {
+  margin: 0;
+  color: var(--comment);
+  font-size: 0.8rem;
+}
+
 .article-nav-list {
   margin: 0;
   padding: 0;
