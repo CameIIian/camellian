@@ -22,4 +22,4 @@ npm run build
 
 - リンク一覧: `src/links.ts`
 - 自己紹介の文言: `src/server.ts`
-- 写真: `public/profile.svg`（任意の画像に差し替え可能）
+- 写真: `public/icon.png`
