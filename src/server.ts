@@ -10,7 +10,7 @@ const { links } = require("./links");
 const port = Number(process.env.PORT ?? 3000);
 
 const stylesPath = path.resolve(__dirname, "../public/styles.css");
-const profilePath = path.resolve(__dirname, "../public/profile.svg");
+const profilePath = path.resolve(__dirname, "../public/icon.png");
 
 const renderPage = () => {
   const renderedLinks = links
@@ -43,31 +43,31 @@ const renderPage = () => {
         <span class="dot green"></span>
       </div>
 
-      <p>links@portfolio:~$ cat profile.txt</p>
+      <p>CamTerm</p>
     </header>
 
     <section class="terminal-body">
-      <h1 class="title">Link Collection</h1>
-      <p class="prompt">$ ようこそ、Link集へ。</p>
+      <p class="prompt">root@camellian:~$ ~/link.sh</p>
       <ul class="link-list">
         ${renderedLinks}
       </ul>
 
+      <p class="prompt">root@camellian:~$ whoami</p>
       <section class="profile-section">
-        <img src="/profile.svg" alt="プロフィール写真" class="profile-image" />
+        <img src="/icon.png" alt="プロフィール写真" class="profile-image" />
         <div class="profile-text">
-          <p class="profile-heading">自己紹介</p>
           <p>
-            Webエンジニアの <strong>Codex User</strong> です。TypeScript と Node.js を中心に、
-            使いやすくて見た目も楽しい Web サイトを作っています。
-          </p>
-          <p>
-            このページでは、普段利用している X や GitHub などのリンクをまとめています。
+            その辺の大学の情報科出身の<strong>一般VRChatter</strong>です。<br/>
+            名前は好きに呼んでください。<strong>かめさん</strong>が多いかも。<br/>
+            <strong>Linux</strong>と<strong>terminal</strong>が好きです。今は<strong>Pop_OS!</strong>ユーザです<br/>
+            <strong>C/C++</strong>と<strong>Python</strong>はわずかに分かります。<br/>
+          </p><p>
+            26年4月から<strong>情報通信関連</strong>で仕事します。
           </p>
         </div>
       </section>
 
-      <p class="prompt">$ _</p>
+      <p class="prompt">root@camellian:~$ _</p>
     </section>
   </main>
 </body>
@@ -80,14 +80,20 @@ const serveFile = (res: any, filePath: string, contentType: string) => {
   res.end(file);
 };
 
+const serveBinaryFile = (res: any, filePath: string, contentType: string) => {
+  const file = fs.readFileSync(filePath); // ← encoding を指定しない
+  res.writeHead(200, { "Content-Type": contentType });
+  res.end(file);
+};
+
 const server = http.createServer((req: { url?: string }, res: any) => {
   if (req.url === "/styles.css") {
     serveFile(res, stylesPath, "text/css; charset=utf-8");
     return;
   }
 
-  if (req.url === "/profile.svg") {
-    serveFile(res, profilePath, "image/svg+xml; charset=utf-8");
+  if (req.url === "/icon.png") {
+    serveBinaryFile(res, profilePath, "image/png");
     return;
   }
 
