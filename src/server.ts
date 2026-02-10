@@ -407,11 +407,14 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
 
   const renderedLinks = links
     .map(
-      (link: { name: string; url: string; description: string }, index: number) => `
+      (link: { icon: string; name: string; url: string; description: string }, index: number) => `
       <li class="link-item">
         <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
         <a href="${link.url}" target="_blank" rel="noopener noreferrer">
-          ${link.name}
+          <span class="link-label">
+            <span class="link-icon" aria-hidden="true">${escapeHtml(link.icon)}</span>
+            <span>${link.name}</span>
+          </span>
         </a>
         <span class="desc"># ${link.description}</span>
       </li>`
