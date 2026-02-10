@@ -26,6 +26,7 @@ type ArticleMeta = {
   title: string;
   fileName: string;
   updatedAt: number;
+  tags: string[];
 };
 
 const escapeHtml = (value: string): string =>
@@ -156,12 +157,25 @@ const getArticleMetas = (): ArticleMeta[] => {
       const title = firstHeading ? firstHeading.slice(2).trim() : fileName.replace(/\.md$/, "");
       const slug = fileName.replace(/\.md$/, "");
       const stats = fs.statSync(articlePath);
+      const tagsLine = source
+        .split(/\r?\n/)
+        .map((line: string) => line.trim())
+        .find((line: string) => /^tags?:\s*/i.test(line));
+
+      const tags = tagsLine
+        ? tagsLine
+            .replace(/^tags?:\s*/i, "")
+            .split(",")
+            .map((tag: string) => tag.trim())
+            .filter(Boolean)
+        : ["untagged"];
 
       return {
         slug,
         title,
         fileName,
         updatedAt: stats.mtimeMs,
+        tags,
       };
     })
     .sort((a: ArticleMeta, b: ArticleMeta) => b.updatedAt - a.updatedAt);
@@ -189,25 +203,64 @@ const loadArticleHtmlBySlug = (slug: string): { title: string; html: string } | 
   };
 };
 
-const renderArticlesIndex = (): string => {
+const formatUpdatedAt = (updatedAt: number): string =>
+  new Intl.DateTimeFormat("ja-JP", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(updatedAt));
+
+const renderArticlesWorkspace = (selectedSlug?: string): string => {
   const articles = getArticleMetas();
 
   if (articles.length === 0) {
     return `<p class="empty-message">~/resources/articles 配下に .md を置くとここに表示されます。</p>`;
   }
 
+  const fallbackSlug = articles[0].slug;
+  const activeSlug = selectedSlug ?? fallbackSlug;
+  const selectedArticle = loadArticleHtmlBySlug(activeSlug);
+
   const list = articles
     .map(
       (article, index) => `
-      <li class="link-item">
-        <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
-        <a href="/articles/${article.slug}">${escapeHtml(article.title)}</a>
-        <span class="desc"># ${escapeHtml(article.fileName)}</span>
+      <li class="article-nav-item ${article.slug === activeSlug ? "is-selected" : ""}">
+        <a href="/articles/${article.slug}" class="article-nav-link">
+          <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
+          <span class="article-nav-main">
+            <span class="article-nav-title">${escapeHtml(article.title)}</span>
+            <span class="article-nav-date">${formatUpdatedAt(article.updatedAt)}</span>
+            <span class="article-nav-tags">${article.tags
+              .map((tag) => `<span class="article-tag">${escapeHtml(tag)}</span>`)
+              .join("")}</span>
+          </span>
+        </a>
       </li>`
     )
     .join("\n");
 
-  return `<ul class="link-list">${list}\n</ul>`;
+  const articleView = selectedArticle
+    ? `
+      <p class="prompt">root@camellian:~$ cat ~/resources/articles/${escapeHtml(activeSlug)}.md</p>
+      <article class="markdown-article">
+        ${selectedArticle.html}
+      </article>
+    `
+    : `
+      <p class="prompt">root@camellian:~$ cat ~/resources/articles/${escapeHtml(activeSlug)}.md</p>
+      <p class="empty-message">指定した記事が見つかりませんでした。</p>
+    `;
+
+  return `
+    <section class="articles-workspace">
+      <aside class="articles-sidebar">
+        <p class="prompt">root@camellian:~$ ls ~/resources/articles</p>
+        <ul class="article-nav-list">${list}\n</ul>
+      </aside>
+      <section class="articles-content">
+        ${articleView}
+      </section>
+    </section>
+  `;
 };
 
 const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: string) => {
@@ -248,8 +301,7 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
       </section>
 `
       : `
-      <p class="prompt">root@camellian:~$ ls ~/resources/articles</p>
-      ${renderArticlesIndex()}
+      ${renderArticlesWorkspace()}
 `;
 
   const tabContent = contentOverride ?? defaultTabContent;
@@ -289,22 +341,10 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
 </html>`;
 };
 
-const renderArticlePage = (slug: string): string | null => {
+const renderArticlePage = (slug: string): string => {
   const article = loadArticleHtmlBySlug(slug);
-
-  if (!article) {
-    return null;
-  }
-
-  const content = `
-    <p class="prompt">root@camellian:~$ cat ~/resources/articles/${escapeHtml(slug)}.md</p>
-    <article class="markdown-article">
-      ${article.html}
-    </article>
-    <p><a href="/articles" class="back-link">← articles 一覧に戻る</a></p>
-  `;
-
-  return renderPage("articles", content, `${article.title} | articles`);
+  const pageTitle = article ? `${article.title} | articles` : "articles";
+  return renderPage("articles", renderArticlesWorkspace(slug), pageTitle);
 };
 
 const serveFile = (res: ServerResponse, filePath: string, contentType: string) => {
@@ -352,12 +392,9 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
   const articleMatch = requestPath.match(/^\/articles\/([a-zA-Z0-9_-]+)$/);
   if (articleMatch) {
-    const articleHtml = renderArticlePage(articleMatch[1]);
-    if (articleHtml) {
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-      res.end(articleHtml);
-      return;
-    }
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(renderArticlePage(articleMatch[1]));
+    return;
   }
 
   res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
