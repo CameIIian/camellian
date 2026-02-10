@@ -11,17 +11,10 @@ npm start
 
 `http://localhost:3000` にアクセスしてください。
 
-## 開発
-
-```bash
-npm run check
-npm run build
-```
-
 ## カスタマイズ
 
 - リンク一覧: `src/links.ts`
 - 自己紹介の文言: `src/server.ts`
 - 写真: `public/icon.png`
 - 記事(Markdown): `resources/articles/*.md`
-  - サンプル: `resources/articles/welcome.md`
+  - Tagの指定方法: .md内に `Tags: linux` 等
