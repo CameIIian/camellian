@@ -240,20 +240,17 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
 
   const articleView = selectedArticle
     ? `
-      <p class="prompt">root@camellian:~$ cat ~/resources/articles/${escapeHtml(activeSlug)}.md</p>
       <article class="markdown-article">
         ${selectedArticle.html}
       </article>
     `
     : `
-      <p class="prompt">root@camellian:~$ cat ~/resources/articles/${escapeHtml(activeSlug)}.md</p>
       <p class="empty-message">指定した記事が見つかりませんでした。</p>
     `;
 
   return `
     <section class="articles-workspace">
       <aside class="articles-sidebar">
-        <p class="prompt">root@camellian:~$ ls ~/resources/articles</p>
         <ul class="article-nav-list">${list}\n</ul>
       </aside>
       <section class="articles-content">
@@ -328,7 +325,7 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
 
     <nav class="tab-bar" aria-label="main tabs">
       <a href="/links" class="tab-item ${activeTab === "links" ? "is-active" : ""}">about</a>
-      <a href="/articles" class="tab-item ${activeTab === "articles" ? "is-active" : ""}">article</a>
+      <a href="/articles" class="tab-item ${activeTab === "articles" ? "is-active" : ""}">articles</a>
     </nav>
 
     <section class="terminal-body">
