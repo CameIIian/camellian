@@ -235,6 +235,19 @@ const formatUpdatedAt = (updatedAt: number): string =>
     timeStyle: "short",
   }).format(new Date(updatedAt));
 
+const getGithubUsername = (): string | null => {
+  const githubLink = links.find((link: { name: string; url: string }) =>
+    link.name.toLowerCase().includes("github")
+  );
+
+  if (!githubLink) {
+    return null;
+  }
+
+  const match = githubLink.url.match(/github\.com\/([^/?#]+)/i);
+  return match ? match[1] : null;
+};
+
 const renderArticlesWorkspace = (selectedSlug?: string): string => {
   const articles = getArticleMetas();
 
@@ -370,6 +383,29 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
 };
 
 const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: string) => {
+  const githubUsername = getGithubUsername();
+
+  const contributionsContent = githubUsername
+    ? `
+      <section class="contributions-section" aria-label="GitHub contributions">
+        <p class="contribution-heading">GitHub Contributions (${escapeHtml(githubUsername)})</p>
+        <a
+          href="https://github.com/${encodeURIComponent(githubUsername)}"
+          class="contributions-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://ghchart.rshah.org/bd93f9/${encodeURIComponent(githubUsername)}"
+            alt="${escapeHtml(githubUsername)} の GitHub contribution chart"
+            class="contributions-chart"
+          />
+        </a>
+        <p class="contribution-note">※ クリックすると GitHub プロフィールを開きます</p>
+      </section>
+`
+    : `<p class="empty-message">GitHubユーザ名を取得できなかったため、contributionsを表示できません。</p>`;
+
   const renderedLinks = links
     .map(
       (link: { name: string; url: string; description: string }, index: number) => `
@@ -406,6 +442,7 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
         </div>
       </section>
       <p class="prompt">root@camellian:~$ cat contributions</p>
+      ${contributionsContent}
 `
       : `
       ${renderArticlesWorkspace()}

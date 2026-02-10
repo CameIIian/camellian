@@ -204,6 +204,44 @@ strong {
   color: var(--comment);
 }
 
+.contributions-section {
+  border: 1px solid rgba(189, 147, 249, 0.45);
+  background: rgba(31, 33, 48, 0.95);
+  border-radius: 8px;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.contribution-heading {
+  margin: 0;
+  color: var(--purple);
+  font-weight: 700;
+}
+
+.contributions-link {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(98, 114, 164, 0.7);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #282a36;
+}
+
+.contributions-chart {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  filter: saturate(1.05) contrast(1.03);
+}
+
+.contribution-note {
+  margin: 0;
+  color: var(--comment);
+  font-size: 0.9rem;
+}
+
 .markdown-article {
   margin-bottom: 16px;
   padding: 14px 16px;
