@@ -1,5 +1,5 @@
 # ルルネちゃん、世界を救って！
-Tag: VRM
+Tag: VRM, 改変
 
 ## 0. 概要
 東方異域見聞 ~Touhou Dystopian~用にVRMを作成した道筋

@@ -1,5 +1,5 @@
 # Obsidian の迷い方
-Tag: Obsidian, Linux, Android
+Tag: Linux, Android
 
 ## 1. install
 - Obsidian
