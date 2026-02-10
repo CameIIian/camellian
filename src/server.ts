@@ -12,7 +12,9 @@ const port = Number(process.env.PORT ?? 3000);
 const stylesPath = path.resolve(__dirname, "../public/styles.css");
 const profilePath = path.resolve(__dirname, "../public/icon.png");
 
-const renderPage = () => {
+type TabKind = "links" | "articles";
+
+const renderPage = (activeTab: TabKind) => {
   const renderedLinks = links
     .map(
       (link: { name: string; url: string; description: string }, index: number) => `
@@ -25,6 +27,34 @@ const renderPage = () => {
       </li>`
     )
     .join("\n");
+
+  const tabContent =
+    activeTab === "links"
+      ? `
+      <p class="prompt">root@camellian:~$ ~/link.sh</p>
+      <ul class="link-list">
+        ${renderedLinks}
+      </ul>
+
+      <p class="prompt">root@camellian:~$ whoami</p>
+      <section class="profile-section">
+        <img src="/icon.png" alt="プロフィール写真" class="profile-image" />
+        <div class="profile-text">
+          <p>
+            その辺の大学の情報科出身の<strong>一般VRChatter</strong>です。<br/>
+            名前は好きに呼んでください。<strong>かめさん</strong>が多いかも。<br/>
+            <strong>Linux</strong>と<strong>terminal</strong>が好きです。今は<strong>Pop_OS!</strong>ユーザです<br/>
+            <strong>C/C++</strong>と<strong>Python</strong>はわずかに分かります。<br/>
+          </p><p>
+            26年4月から<strong>情報通信関連</strong>で仕事します。
+          </p>
+        </div>
+      </section>
+`
+      : `
+      <p class="prompt">root@camellian:~$ ls ~/articles</p>
+      <p class="empty-message">まだ記事はありません。</p>
+`;
 
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -46,26 +76,13 @@ const renderPage = () => {
       <p>CamTerm</p>
     </header>
 
-    <section class="terminal-body">
-      <p class="prompt">root@camellian:~$ ~/link.sh</p>
-      <ul class="link-list">
-        ${renderedLinks}
-      </ul>
+    <nav class="tab-bar" aria-label="main tabs">
+      <a href="/links" class="tab-item ${activeTab === "links" ? "is-active" : ""}">links</a>
+      <a href="/articles" class="tab-item ${activeTab === "articles" ? "is-active" : ""}">articles</a>
+    </nav>
 
-      <p class="prompt">root@camellian:~$ whoami</p>
-      <section class="profile-section">
-        <img src="/icon.png" alt="プロフィール写真" class="profile-image" />
-        <div class="profile-text">
-          <p>
-            その辺の大学の情報科出身の<strong>一般VRChatter</strong>です。<br/>
-            名前は好きに呼んでください。<strong>かめさん</strong>が多いかも。<br/>
-            <strong>Linux</strong>と<strong>terminal</strong>が好きです。今は<strong>Pop_OS!</strong>ユーザです<br/>
-            <strong>C/C++</strong>と<strong>Python</strong>はわずかに分かります。<br/>
-          </p><p>
-            26年4月から<strong>情報通信関連</strong>で仕事します。
-          </p>
-        </div>
-      </section>
+    <section class="terminal-body">
+      ${tabContent}
 
       <p class="prompt">root@camellian:~$ _</p>
     </section>
@@ -98,8 +115,20 @@ const server = http.createServer((req: { url?: string }, res: any) => {
   }
 
   if (req.url === "/") {
+    res.writeHead(302, { Location: "/links" });
+    res.end();
+    return;
+  }
+
+  if (req.url === "/links") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderPage());
+    res.end(renderPage("links"));
+    return;
+  }
+
+  if (req.url === "/articles") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(renderPage("articles"));
     return;
   }
 
