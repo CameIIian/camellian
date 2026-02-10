@@ -194,6 +194,76 @@ strong {
   color: var(--comment);
 }
 
+.markdown-article {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(98, 114, 164, 0.45);
+  border-radius: 8px;
+  background: rgba(40, 42, 54, 0.55);
+}
+
+.markdown-article h1,
+.markdown-article h2,
+.markdown-article h3,
+.markdown-article h4,
+.markdown-article h5,
+.markdown-article h6 {
+  margin: 0 0 10px;
+  color: var(--purple);
+  line-height: 1.4;
+}
+
+.markdown-article p,
+.markdown-article blockquote,
+.markdown-article ul,
+.markdown-article pre {
+  margin: 0 0 12px;
+}
+
+.markdown-article blockquote {
+  margin-left: 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--comment);
+  color: #c8d1ff;
+}
+
+.markdown-article hr {
+  border: 0;
+  border-top: 1px dashed rgba(98, 114, 164, 0.6);
+  margin: 12px 0;
+}
+
+.article-list-markdown {
+  padding-left: 22px;
+  color: var(--text);
+}
+
+.markdown-article pre {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #44475a;
+  background: #11131d;
+  overflow-x: auto;
+}
+
+.markdown-article code {
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  background: rgba(68, 71, 90, 0.55);
+  color: var(--orange);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.markdown-article pre code {
+  background: transparent;
+  color: var(--text);
+  padding: 0;
+}
+
+.back-link {
+  color: var(--pink);
+}
+
 @media (max-width: 640px) {
   .link-item {
     grid-template-columns: 36px 1fr;
