@@ -1,0 +1,13 @@
+{
+  "name": "website-link-collection",
+  "version": "1.0.0",
+  "description": "Terminal-style Dracula themed link collection site",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsc && node dist/server.js",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "check": "tsc --noEmit"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,133 @@
+:root {
+  --bg: #282a36;
+  --surface: #1f2130;
+  --text: #f8f8f2;
+  --comment: #6272a4;
+  --cyan: #8be9fd;
+  --green: #50fa7b;
+  --orange: #ffb86c;
+  --pink: #ff79c6;
+  --purple: #bd93f9;
+  --red: #ff5555;
+  --yellow: #f1fa8c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  background: radial-gradient(circle at top right, #44475a 0%, var(--bg) 50%);
+  color: var(--text);
+  padding: 24px;
+}
+
+.terminal {
+  width: min(860px, 100%);
+  background: var(--surface);
+  border: 1px solid #44475a;
+  border-radius: 10px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: #191a21;
+  border-bottom: 1px solid #44475a;
+}
+
+.terminal-header p {
+  margin: 0;
+  color: var(--comment);
+  font-size: 0.92rem;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.red {
+  background: var(--red);
+}
+
+.yellow {
+  background: var(--yellow);
+}
+
+.green {
+  background: var(--green);
+}
+
+.terminal-body {
+  padding: 20px;
+  line-height: 1.8;
+}
+
+.prompt {
+  color: var(--green);
+  margin: 0 0 12px;
+}
+
+.link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.link-item {
+  display: grid;
+  grid-template-columns: 44px minmax(120px, 200px) 1fr;
+  gap: 12px;
+  align-items: baseline;
+  border-bottom: 1px dashed rgba(98, 114, 164, 0.4);
+  padding-bottom: 6px;
+}
+
+.line-no {
+  color: var(--comment);
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--pink);
+  text-decoration: underline;
+}
+
+.desc {
+  color: var(--orange);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .link-item {
+    grid-template-columns: 36px 1fr;
+  }
+
+  .desc {
+    grid-column: 2;
+    margin-top: -8px;
+    color: var(--purple);
+  }
+}
