@@ -327,8 +327,8 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
     </header>
 
     <nav class="tab-bar" aria-label="main tabs">
-      <a href="/links" class="tab-item ${activeTab === "links" ? "is-active" : ""}">links</a>
-      <a href="/articles" class="tab-item ${activeTab === "articles" ? "is-active" : ""}">articles</a>
+      <a href="/links" class="tab-item ${activeTab === "links" ? "is-active" : ""}">about</a>
+      <a href="/articles" class="tab-item ${activeTab === "articles" ? "is-active" : ""}">article</a>
     </nav>
 
     <section class="terminal-body">

@@ -45,20 +45,32 @@ body {
 .tab-bar {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 0 16px;
+  gap: 0;
+  padding: 0;
   background: #1d1f2b;
   border-bottom: 1px solid #44475a;
 }
 
 .tab-item {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: var(--comment);
   text-decoration: none;
   text-transform: lowercase;
   padding: 10px 14px;
   border-top: 2px solid transparent;
-  border-left: 1px solid transparent;
-  border-right: 1px solid transparent;
+  border-left: 1px solid #44475a;
+  border-right: 1px solid #44475a;
+}
+
+.tab-item:first-child {
+  border-left: none;
+}
+
+.tab-item:last-child {
+  border-right: none;
 }
 
 .tab-item:hover {
@@ -69,8 +81,6 @@ body {
 .tab-item.is-active {
   color: var(--text);
   border-top-color: var(--purple);
-  border-left-color: #44475a;
-  border-right-color: #44475a;
   background: rgba(40, 42, 54, 0.65);
 }
 
