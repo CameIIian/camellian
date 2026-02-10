@@ -37,16 +37,42 @@ const escapeHtml = (value: string): string =>
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
+const normalizeExternalUrl = (url: string): string =>
+  /^https?:\/\//i.test(url) ? url : `https://${url}`;
+
+const linkifyPlainUrls = (text: string): string => {
+  const urlPattern =
+    /(^|[\s(>])((?:https?:\/\/|www\.)[^\s<]+|(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s<]*)?)/g;
+
+  return text.replace(urlPattern, (_match: string, prefix: string, rawUrl: string) => {
+    const trailingMatch = rawUrl.match(/[),.;:!?]+$/);
+    const trailing = trailingMatch ? trailingMatch[0] : "";
+    const trimmedUrl = trailing ? rawUrl.slice(0, -trailing.length) : rawUrl;
+
+    if (!trimmedUrl.includes(".")) {
+      return `${prefix}${rawUrl}`;
+    }
+
+    const href = normalizeExternalUrl(trimmedUrl);
+    return `${prefix}<a href="${href}" target="_blank" rel="noopener noreferrer">${trimmedUrl}</a>${trailing}`;
+  });
+};
+
 const parseInlineMarkdown = (text: string): string => {
   let escaped = escapeHtml(text);
 
   escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
   escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-  escaped = escaped.replace(
-    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
-  );
+  escaped = escaped.replace(/\[([^\]]+)\]\(([^\s)]+)\)/g, (_match: string, label: string, rawUrl: string) => {
+    const href = normalizeExternalUrl(rawUrl);
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  });
+
+  escaped = escaped
+    .split(/(<[^>]+>)/g)
+    .map((segment: string) => (segment.startsWith("<") ? segment : linkifyPlainUrls(segment)))
+    .join("");
 
   return escaped;
 };
