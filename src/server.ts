@@ -488,8 +488,7 @@ const renderPhotoWorkspace = (): string => {
 
   if (pictures.length === 0) {
     return `
-      <p class="prompt">root@camellian:~$ ls ~/resources/pictures</p>
-      <p class="empty-message">resources/pictures に .png / .jpg を置くとここに表示されます。</p>
+      <p class="prompt">root@camellian:~$ ll ~/Pictures/*.{png,jpg}</p>
       <p class="prompt">root@camellian:~$ _</p>
     `;
   }
@@ -516,7 +515,7 @@ const renderPhotoWorkspace = (): string => {
 
   return `
     <section class="photo-workspace">
-      <p class="prompt">root@camellian:~$ ls ~/resources/pictures/*.{png,jpg}</p>
+      <p class="prompt">root@camellian:~$ ll ~/Pictures/*.{png,jpg}</p>
       <div class="photo-list">
         ${items}
       </div>

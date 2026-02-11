@@ -15,6 +15,7 @@ npm start
 
 - リンク一覧: `src/links.ts`
 - 自己紹介の文言: `src/server.ts`
-- 写真: `public/icon.png`
+- アイコン: `public/icon.png`
+- 写真: `resources/pictures/*.(jpg/png)`
 - 記事(Markdown): `resources/articles/*.md`
   - Tagの指定方法: .md内に `Tags: linux` 等
