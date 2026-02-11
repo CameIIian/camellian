@@ -40,6 +40,21 @@ const escapeHtml = (value: string): string =>
 const normalizeExternalUrl = (url: string): string =>
   /^https?:\/\//i.test(url) ? url : `https://${url}`;
 
+const sanitizeExternalUrl = (url: string): string => {
+  const normalizedUrl = normalizeExternalUrl(url.trim());
+
+  try {
+    const parsed = new URL(normalizedUrl);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.href;
+    }
+  } catch (_error) {
+    return "#";
+  }
+
+  return "#";
+};
+
 const linkifyPlainUrls = (text: string): string => {
   const urlPattern =
     /(^|[\s(>])((?:https?:\/\/|www\.)[^\s<]+|(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s<]*)?)/g;
@@ -53,7 +68,7 @@ const linkifyPlainUrls = (text: string): string => {
       return `${prefix}${rawUrl}`;
     }
 
-    const href = normalizeExternalUrl(trimmedUrl);
+    const href = sanitizeExternalUrl(trimmedUrl);
     return `${prefix}<a href="${href}" target="_blank" rel="noopener noreferrer">${trimmedUrl}</a>${trailing}`;
   });
 };
@@ -65,7 +80,7 @@ const parseInlineMarkdown = (text: string): string => {
   escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
   escaped = escaped.replace(/\[([^\]]+)\]\(([^\s)]+)\)/g, (_match: string, label: string, rawUrl: string) => {
-    const href = normalizeExternalUrl(rawUrl);
+    const href = sanitizeExternalUrl(rawUrl);
     return `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
   });
 
@@ -410,13 +425,13 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
       (link: { icon: string; name: string; url: string; description: string }, index: number) => `
       <li class="link-item">
         <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
-        <a href="${link.url}" target="_blank" rel="noopener noreferrer">
+        <a href="${sanitizeExternalUrl(link.url)}" target="_blank" rel="noopener noreferrer">
           <span class="link-label">
             <span class="link-icon" aria-hidden="true">${escapeHtml(link.icon)}</span>
-            <span>${link.name}</span>
+            <span>${escapeHtml(link.name)}</span>
           </span>
         </a>
-        <span class="desc"># ${link.description}</span>
+        <span class="desc"># ${escapeHtml(link.description)}</span>
       </li>`
     )
     .join("\n");
