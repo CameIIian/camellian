@@ -7,7 +7,9 @@
     "dev": "tsc && node dist/server.js",
     "build": "tsc",
     "start": "node dist/server.js",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "build:cloudflare": "npm run build && node dist/build-cloudflare.js",
+    "preview:cloudflare": "npx wrangler pages dev cloudflare-dist"
   },
   "license": "MIT",
   "dependencies": {
