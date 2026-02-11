@@ -525,18 +525,14 @@ strong {
 
 .photo-list {
   display: grid;
-  gap: 16px;
+  gap: 22px;
   max-height: calc(100vh - 230px);
   overflow-y: auto;
   padding-right: 6px;
 }
 
-.photo-card {
+.photo-item {
   margin: 0;
-  border: 1px solid rgba(98, 114, 164, 0.45);
-  border-radius: 8px;
-  background: rgba(25, 26, 33, 0.85);
-  padding: 12px;
   display: grid;
   gap: 10px;
 }
@@ -556,10 +552,6 @@ strong {
   color: var(--cyan);
   border-radius: 4px;
   padding: 1px 6px;
-}
-
-.photo-comment {
-  color: var(--orange);
 }
 
 .photo-image {
