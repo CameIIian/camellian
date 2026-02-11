@@ -487,7 +487,7 @@ const renderPhotoWorkspace = (): string => {
       <figure class="photo-item">
         <figcaption class="photo-source">
           <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
-          <code>resources/pictures/${escapeHtml(picture.fileName)}</code>
+          <code>${escapeHtml(picture.fileName)}</code>
         </figcaption>
         <img
           src="/pictures/${encodeURIComponent(picture.fileName)}"
