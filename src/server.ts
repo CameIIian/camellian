@@ -18,8 +18,9 @@ const port = Number(process.env.PORT ?? 3000);
 const stylesPath = path.resolve(__dirname, "../public/styles.css");
 const profilePath = path.resolve(__dirname, "../public/icon.png");
 const articlesDirPath = path.resolve(__dirname, "../resources/articles");
+const picturesDirPath = path.resolve(__dirname, "../resources/pictures");
 
-type TabKind = "links" | "articles";
+type TabKind = "links" | "articles" | "photo";
 
 type ArticleMeta = {
   slug: string;
@@ -27,6 +28,11 @@ type ArticleMeta = {
   fileName: string;
   updatedAt: number;
   tags: string[];
+};
+
+type PictureMeta = {
+  fileName: string;
+  comment: string;
 };
 
 const escapeHtml = (value: string): string =>
@@ -220,6 +226,29 @@ const getArticleMetas = (): ArticleMeta[] => {
       };
     })
     .sort((a: ArticleMeta, b: ArticleMeta) => b.updatedAt - a.updatedAt);
+};
+
+const getPictureMetas = (): PictureMeta[] => {
+  if (!fs.existsSync(picturesDirPath)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(picturesDirPath)
+    .filter((fileName: string) => /\.(png|jpg|jpeg)$/i.test(fileName))
+    .sort((a: string, b: string) => a.localeCompare(b, "ja"))
+    .map((fileName: string) => {
+      const baseName = fileName.replace(/\.(png|jpe?g)$/i, "");
+      const comment = baseName
+        .split(/[_\-\s]+/)
+        .map((segment) => segment.trim())
+        .find(Boolean);
+
+      return {
+        fileName,
+        comment: comment ?? "photo",
+      };
+    });
 };
 
 const loadArticleHtmlBySlug = (slug: string): { title: string; html: string } | null => {
@@ -454,6 +483,48 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
   `;
 };
 
+const renderPhotoWorkspace = (): string => {
+  const pictures = getPictureMetas();
+
+  if (pictures.length === 0) {
+    return `
+      <p class="prompt">root@camellian:~$ ls ~/resources/pictures</p>
+      <p class="empty-message">resources/pictures に .png / .jpg を置くとここに表示されます。</p>
+      <p class="prompt">root@camellian:~$ _</p>
+    `;
+  }
+
+  const items = pictures
+    .map(
+      (picture: PictureMeta, index: number) => `
+      <article class="photo-card">
+        <p class="photo-source">
+          <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
+          <code>resources/pictures/${escapeHtml(picture.fileName)}</code>
+          <span class="photo-comment"># ${escapeHtml(picture.comment)}</span>
+        </p>
+        <img
+          src="/pictures/${encodeURIComponent(picture.fileName)}"
+          alt="${escapeHtml(picture.comment)}"
+          class="photo-image"
+          loading="lazy"
+        />
+      </article>
+    `
+    )
+    .join("\n");
+
+  return `
+    <section class="photo-workspace">
+      <p class="prompt">root@camellian:~$ ls ~/resources/pictures/*.{png,jpg}</p>
+      <div class="photo-list">
+        ${items}
+      </div>
+      <p class="prompt">root@camellian:~$ _</p>
+    </section>
+  `;
+};
+
 const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: string) => {
   const githubUsername = getGithubUsername();
 
@@ -518,8 +589,12 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
       <p class="prompt">root@camellian:~$ cat contributions</p>
       ${contributionsContent}
       <p class="prompt">root@camellian:~$ _</p>`
-      : `
+      : activeTab === "articles"
+      ? `
       ${renderArticlesWorkspace()}
+`
+      : `
+      ${renderPhotoWorkspace()}
 `;
 
   const tabContent = contentOverride ?? defaultTabContent;
@@ -547,6 +622,7 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
     <nav class="tab-bar" aria-label="main tabs">
       <a href="/links" class="tab-item ${activeTab === "links" ? "is-active" : ""}">about</a>
       <a href="/articles" class="tab-item ${activeTab === "articles" ? "is-active" : ""}">articles</a>
+      <a href="/photo" class="tab-item ${activeTab === "photo" ? "is-active" : ""}">photo</a>
     </nav>
 
     <section class="terminal-body">
@@ -603,6 +679,34 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
   if (requestPath === "/articles") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(renderPage("articles"));
+    return;
+  }
+
+  if (requestPath === "/photo") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(renderPage("photo"));
+    return;
+  }
+
+  const pictureMatch = requestPath.match(/^\/pictures\/([^/]+)$/);
+  if (pictureMatch) {
+    const rawName = decodeURIComponent(pictureMatch[1]);
+
+    if (!/^[a-zA-Z0-9._-]+$/.test(rawName) || !/\.(png|jpe?g)$/i.test(rawName)) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Not Found");
+      return;
+    }
+
+    const picturePath = path.resolve(picturesDirPath, rawName);
+    if (!picturePath.startsWith(picturesDirPath) || !fs.existsSync(picturePath)) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Not Found");
+      return;
+    }
+
+    const contentType = /\.png$/i.test(rawName) ? "image/png" : "image/jpeg";
+    serveBinaryFile(res, picturePath, contentType);
     return;
   }
 
