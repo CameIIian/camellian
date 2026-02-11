@@ -321,7 +321,8 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
 
   return `
     <section class="articles-workspace">
-      <aside class="articles-sidebar">
+      <div class="articles-sidebar-backdrop" data-sidebar-close></div>
+      <aside class="articles-sidebar" id="articles-sidebar">
         <div class="article-filter-panel">
           <label for="article-search" class="article-filter-label">search</label>
           <input
@@ -343,13 +344,69 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
       <section class="articles-content">
         ${articleView}
       </section>
+      <button
+        type="button"
+        class="article-menu-toggle"
+        aria-label="記事一覧メニューを開く"
+        aria-controls="articles-sidebar"
+        aria-expanded="false"
+      >
+        ☰ Menu
+      </button>
     </section>
     <script>
       (() => {
+        const workspace = document.querySelector(".articles-workspace");
+        const menuToggleButton = document.querySelector(".article-menu-toggle");
+        const sidebarCloseElements = Array.from(document.querySelectorAll("[data-sidebar-close]"));
+        const sidebarLinks = Array.from(document.querySelectorAll(".article-nav-link"));
         const searchInput = document.querySelector("#article-search");
         const tagButtons = Array.from(document.querySelectorAll(".article-filter-tag"));
         const articleItems = Array.from(document.querySelectorAll(".article-nav-item"));
         const summary = document.querySelector("#article-filter-summary");
+
+        const closeSidebar = () => {
+          if (!workspace || !menuToggleButton) {
+            return;
+          }
+
+          workspace.classList.remove("is-sidebar-open");
+          menuToggleButton.setAttribute("aria-expanded", "false");
+        };
+
+        const openSidebar = () => {
+          if (!workspace || !menuToggleButton) {
+            return;
+          }
+
+          workspace.classList.add("is-sidebar-open");
+          menuToggleButton.setAttribute("aria-expanded", "true");
+        };
+
+        if (workspace && menuToggleButton) {
+          menuToggleButton.addEventListener("click", () => {
+            const isOpen = workspace.classList.contains("is-sidebar-open");
+            if (isOpen) {
+              closeSidebar();
+            } else {
+              openSidebar();
+            }
+          });
+
+          sidebarCloseElements.forEach((element) => {
+            element.addEventListener("click", closeSidebar);
+          });
+
+          sidebarLinks.forEach((link) => {
+            link.addEventListener("click", closeSidebar);
+          });
+
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+              closeSidebar();
+            }
+          });
+        }
 
         if (!searchInput || tagButtons.length === 0 || articleItems.length === 0 || !summary) {
           return;
