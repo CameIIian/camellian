@@ -22,16 +22,31 @@ body {
   font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
   background: radial-gradient(circle at top right, #44475a 0%, var(--bg) 50%);
   color: var(--text);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
-* {
-  scrollbar-width: none;
+html {
+  scrollbar-color: #6272a4 #1f2130;
+  scrollbar-width: thin;
 }
 
-*::-webkit-scrollbar {
-  width: 0;
+html::-webkit-scrollbar {
+  width: 10px;
   height: 0;
+}
+
+html::-webkit-scrollbar-track {
+  background: #1f2130;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6272a4, #44475a);
+  border-radius: 999px;
+  border: 2px solid #1f2130;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #8be9fd, #6272a4);
 }
 
 .terminal {
@@ -164,6 +179,8 @@ body {
 a {
   color: var(--cyan);
   text-decoration: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 a:hover {
@@ -433,6 +450,12 @@ strong {
   gap: 4px;
 }
 
+.article-nav-title,
+.article-nav-date {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .article-nav-title {
   color: var(--cyan);
   font-weight: 600;
@@ -463,6 +486,9 @@ strong {
   border: 1px solid #44475a;
   background: #11131d;
   overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 100%;
 }
 
 .markdown-article code {
@@ -477,6 +503,15 @@ strong {
   background: transparent;
   color: var(--text);
   padding: 0;
+}
+
+.markdown-article,
+.markdown-article p,
+.markdown-article li,
+.desc,
+.link-label {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .back-link {
