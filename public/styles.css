@@ -22,6 +22,16 @@ body {
   font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
   background: radial-gradient(circle at top right, #44475a 0%, var(--bg) 50%);
   color: var(--text);
+  overflow-x: hidden;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .terminal {
@@ -219,10 +229,7 @@ strong {
 }
 
 .contributions-section {
-  border: 1px solid rgba(189, 147, 249, 0.45);
-  background: rgba(31, 33, 48, 0.95);
-  border-radius: 8px;
-  padding: 14px;
+  padding: 4px 0;
   display: grid;
   gap: 10px;
 }
@@ -236,10 +243,6 @@ strong {
 .contributions-link {
   display: block;
   width: 100%;
-  border: 1px solid rgba(98, 114, 164, 0.7);
-  border-radius: 6px;
-  overflow: hidden;
-  background: #282a36;
 }
 
 .contributions-chart {
