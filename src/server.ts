@@ -32,7 +32,6 @@ type ArticleMeta = {
 
 type PictureMeta = {
   fileName: string;
-  comment: string;
 };
 
 const escapeHtml = (value: string): string =>
@@ -237,18 +236,7 @@ const getPictureMetas = (): PictureMeta[] => {
     .readdirSync(picturesDirPath)
     .filter((fileName: string) => /\.(png|jpg|jpeg)$/i.test(fileName))
     .sort((a: string, b: string) => a.localeCompare(b, "ja"))
-    .map((fileName: string) => {
-      const baseName = fileName.replace(/\.(png|jpe?g)$/i, "");
-      const comment = baseName
-        .split(/[_\-\s]+/)
-        .map((segment) => segment.trim())
-        .find(Boolean);
-
-      return {
-        fileName,
-        comment: comment ?? "photo",
-      };
-    });
+    .map((fileName: string) => ({ fileName }));
 };
 
 const loadArticleHtmlBySlug = (slug: string): { title: string; html: string } | null => {
@@ -496,19 +484,18 @@ const renderPhotoWorkspace = (): string => {
   const items = pictures
     .map(
       (picture: PictureMeta, index: number) => `
-      <article class="photo-card">
-        <p class="photo-source">
+      <figure class="photo-item">
+        <figcaption class="photo-source">
           <span class="line-no">${String(index + 1).padStart(2, "0")}</span>
           <code>resources/pictures/${escapeHtml(picture.fileName)}</code>
-          <span class="photo-comment"># ${escapeHtml(picture.comment)}</span>
-        </p>
+        </figcaption>
         <img
           src="/pictures/${encodeURIComponent(picture.fileName)}"
-          alt="${escapeHtml(picture.comment)}"
+          alt="${escapeHtml(picture.fileName)}"
           class="photo-image"
           loading="lazy"
         />
-      </article>
+      </figure>
     `
     )
     .join("\n");
