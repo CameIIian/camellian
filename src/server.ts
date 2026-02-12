@@ -565,7 +565,7 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
           <p>
             その辺の大学の情報科出身の<strong>一般VRChatter</strong>です。<br/>
             名前は好きに呼んでください。<strong>かめさん</strong>が多いかも。<br/>
-            <strong>Linux</strong>と<strong>Terminal</strong>が好きです。今は<strong>Pop_OS!</strong>ユーザです。<br/>
+            <strong>Linux</strong>と<strong>Terminal</strong>が好きです。今は<strong>Pop!_OS</strong>ユーザです。<br/>
             <strong>C/C++</strong>と<strong>Python</strong>はわずかに分かります。<br/>
           </p><p>
             26年4月から<strong>情報通信関連</strong>で仕事します。
