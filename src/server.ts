@@ -476,8 +476,8 @@ const renderPhotoWorkspace = (): string => {
 
   if (pictures.length === 0) {
     return `
-      <p class="prompt">root@camellian:~$ ll ~/Pictures/*.{png,jpg}</p>
-      <p class="prompt">root@camellian:~$ _</p>
+      <p class="prompt">visitor@camellian:~$ ll ~/Pictures/*.{png,jpg}</p>
+      <p class="prompt">visitor@camellian:~$ _</p>
     `;
   }
 
@@ -502,11 +502,11 @@ const renderPhotoWorkspace = (): string => {
 
   return `
     <section class="photo-workspace">
-      <p class="prompt">root@camellian:~$ ll ~/Pictures/*.{png,jpg}</p>
+      <p class="prompt">visitor@camellian:~$ ll ~/Pictures/*.{png,jpg}</p>
       <div class="photo-list">
         ${items}
       </div>
-      <p class="prompt">root@camellian:~$ _</p>
+      <p class="prompt">visitor@camellian:~$ _</p>
     </section>
   `;
 };
@@ -553,12 +553,12 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
   const defaultTabContent =
     activeTab === "links"
       ? `
-      <p class="prompt">root@camellian:~$ ~/link.sh</p>
+      <p class="prompt">visitor@camellian:~$ ~/link.sh</p>
       <ul class="link-list">
         ${renderedLinks}
       </ul>
 
-      <p class="prompt">root@camellian:~$ whoami</p>
+      <p class="prompt">visitor@camellian:~$ whoami</p>
       <section class="profile-section">
         <img src="/icon.png" alt="プロフィール写真" class="profile-image" />
         <div class="profile-text">
@@ -572,9 +572,9 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
           </p>
         </div>
       </section>
-      <p class="prompt">root@camellian:~$ cat contributions</p>
+      <p class="prompt">visitor@camellian:~$ cat contributions</p>
       ${contributionsContent}
-      <p class="prompt">root@camellian:~$ _</p>`
+      <p class="prompt">visitor@camellian:~$ _</p>`
       : activeTab === "articles"
       ? `
       ${renderArticlesWorkspace()}
