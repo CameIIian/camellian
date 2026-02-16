@@ -498,7 +498,6 @@ strong {
 
 .markdown-article .code-block pre {
   margin: 0;
-  padding-top: 40px;
 }
 
 .code-copy-button {
@@ -513,6 +512,7 @@ strong {
   font-size: 0.75rem;
   padding: 3px 10px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .code-copy-button:hover {
