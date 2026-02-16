@@ -32,6 +32,13 @@ const writeRouteHtml = (route: string, html: string) => {
   fs.writeFileSync(path.join(routeDir, "index.html"), html, "utf-8");
 };
 
+const writeRouteFile = (route: string, body: string) => {
+  const normalized = route.replace(/^\//, "");
+  const outputPath = path.join(distDir, normalized);
+  ensureDir(path.dirname(outputPath));
+  fs.writeFileSync(outputPath, body, "utf-8");
+};
+
 const requestHtml = (route: string): Promise<string> =>
   new Promise((resolve, reject) => {
     http
@@ -95,6 +102,9 @@ const copyPublicAssets = () => {
     const destination = path.join(distDir, fileName);
     fs.copyFileSync(source, destination);
   });
+
+  const iconAliasPath = path.join(distDir, "public.icon");
+  fs.copyFileSync(path.join(publicDir, "icon.png"), iconAliasPath);
 };
 
 const copyPictures = () => {
@@ -147,11 +157,18 @@ const buildCloudflareDist = async () => {
   try {
     await requestWithRetry("/links", 20);
 
-    const routes = ["/links", "/articles", "/photo", ...getArticleSlugs().map((slug) => `/articles/${slug}`)];
+    const articleSlugs = getArticleSlugs();
+    const routes = ["/links", "/articles", "/photo", ...articleSlugs.map((slug) => `/articles/${slug}`)];
 
     for (const route of routes) {
       const html = await requestWithRetry(route, 3);
       writeRouteHtml(route, html);
+    }
+
+    const ogpRoutes = ["/ogp/links.svg", "/ogp/photo.svg", "/ogp/articles.svg", ...articleSlugs.map((slug) => `/ogp/articles/${slug}.svg`)];
+    for (const route of ogpRoutes) {
+      const svg = await requestWithRetry(route, 3);
+      writeRouteFile(route, svg);
     }
 
     writeRouteHtml("/", `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/links"></head><body></body></html>`);
