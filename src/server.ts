@@ -737,8 +737,11 @@ const renderPage = (
           </p>
         </div>
       </section>
-      <p class="prompt">visitor@camellian:~$ ls</p>  
-      articles  photo
+      <p class="prompt">visitor@camellian:~$ ls</p>
+      <p>
+        <a href="/articles">articles</a>
+        <a href="/photo">photo</a>
+      </p>
       <p class="prompt">visitor@camellian:~$ cat contributions</p>
       ${contributionsContent}
       <p class="prompt">visitor@camellian:~$ _</p>`
