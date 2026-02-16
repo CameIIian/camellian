@@ -1,5 +1,7 @@
 # Linuxでもちふぃったが動くまで
 Tag: VRChat, 改変
+date: 2025/11/24
+
 ## 1. 準備するもの
 - もちふぃった
 > https://booth.pm/ja/items/7657840

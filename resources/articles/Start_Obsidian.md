@@ -1,5 +1,6 @@
 # Obsidian の迷い方
 Tag: Linux, Android
+date: 2025/10/29
 
 ## 1. install
 - Obsidian

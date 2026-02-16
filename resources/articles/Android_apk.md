@@ -1,5 +1,6 @@
 # こだわり控えめ野良APK
 Tag: Android
+date: 2025/12/01
 
 [MONE FIERA](https://note.com/forsaken_love02)様の[Android野良アプリ一覧](https://note.com/forsaken_love02/n/nd42186d4361a)を参考
 ありがとうございます

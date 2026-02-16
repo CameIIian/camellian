@@ -1,5 +1,6 @@
 # helixが良さげって話
 Tag: Editor
+date: 2026/01/29
 
 - official
 	https://helix-editor.com/

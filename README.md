@@ -19,7 +19,7 @@ npm start
 - 写真: `resources/pictures/*.(jpg/png)`
 - 記事(Markdown): `resources/articles/*.md`
   - Tagの指定方法: .md内に `Tags: linux` 等
-
+  - 日付の指定方法: .md内に `date: yyyy/mm/dd` 等
 
 ## Cloudflare Pages で公開
 

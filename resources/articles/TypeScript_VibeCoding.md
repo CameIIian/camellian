@@ -1,5 +1,6 @@
 # CodexにBlogを作ってもらう
 Tag: TypeScript, VibeCoding
+date: 2026/02/06
 
 - Vibe Coding始めて
 - TypeScript知らない、HTMLとCSSなら概形はわかる

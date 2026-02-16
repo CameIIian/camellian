@@ -1,5 +1,6 @@
 # Termux であそぼ
 Tag: Android, Linux
+date: 2025/11/28
 
 ## 1. Termuxのセットアップ
 ### update

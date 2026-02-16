@@ -1,5 +1,6 @@
 # もしもう一度Windowsと向き合うなら
 Tag: Windows
+date: 2026/01/22
 
 ### 1. まずやること
 セキュリティソフト: uninstall
