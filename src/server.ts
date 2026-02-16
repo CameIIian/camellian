@@ -2,7 +2,7 @@ declare const __dirname: string;
 declare const require: any;
 declare const process: any;
 
-type IncomingMessage = { url?: string };
+type IncomingMessage = { url?: string; headers?: Record<string, string | string[] | undefined> };
 type ServerResponse = {
   writeHead: (statusCode: number, headers: Record<string, string>) => void;
   end: (chunk?: string | Uint8Array) => void;
@@ -43,6 +43,14 @@ const escapeHtml = (value: string): string =>
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+
+const escapeXml = (value: string): string =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 
 const normalizeExternalUrl = (url: string): string =>
   /^https?:\/\//i.test(url) ? url : `https://${url}`;
@@ -611,7 +619,45 @@ const renderPhotoWorkspace = (): string => {
   `;
 };
 
-const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: string) => {
+const renderOgpCardSvg = (title: string): string => {
+  const safeTitle = escapeXml(title);
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${safeTitle}">
+  <defs>
+    <linearGradient id="draculaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#282a36" />
+      <stop offset="100%" stop-color="#1f2130" />
+    </linearGradient>
+    <linearGradient id="terminalHeader" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#44475a" />
+      <stop offset="100%" stop-color="#373a4d" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#draculaBg)" />
+  <rect x="48" y="48" width="1104" height="534" rx="22" fill="#1f2130" stroke="#6272a4" stroke-width="2" />
+  <rect x="48" y="48" width="1104" height="72" rx="22" fill="url(#terminalHeader)" />
+  <circle cx="88" cy="84" r="10" fill="#ff5555" />
+  <circle cx="118" cy="84" r="10" fill="#f1fa8c" />
+  <circle cx="148" cy="84" r="10" fill="#50fa7b" />
+  <text x="190" y="92" fill="#f8f8f2" font-size="24" font-family="JetBrains Mono, Fira Code, Consolas, monospace">CamTerm OGP</text>
+  <text x="92" y="190" fill="#50fa7b" font-size="28" font-family="JetBrains Mono, Fira Code, Consolas, monospace">visitor@camellian:~$ open-page</text>
+  <text x="92" y="268" fill="#f8f8f2" font-size="70" font-weight="700" font-family="\"Noto Sans JP\", \"Hiragino Kaku Gothic ProN\", sans-serif">${safeTitle}</text>
+  <rect x="88" y="492" width="56" height="56" rx="12" fill="#282a36" stroke="#6272a4" />
+  <image href="/public.icon" x="92" y="496" width="48" height="48" preserveAspectRatio="xMidYMid slice" />
+  <text x="162" y="528" fill="#8be9fd" font-size="34" font-family="JetBrains Mono, Fira Code, Consolas, monospace">かめりあん</text>
+  <text x="930" y="528" fill="#bd93f9" font-size="26" font-family="JetBrains Mono, Fira Code, Consolas, monospace">Dracula Terminal</text>
+</svg>`;
+};
+
+const renderPage = (
+  activeTab: TabKind,
+  contentOverride?: string,
+  pageTitle?: string,
+  ogTitle?: string,
+  ogImagePath?: string,
+  canonicalPath?: string
+) => {
   const githubUsername = getGithubUsername();
 
   const contributionsContent = githubUsername
@@ -685,12 +731,28 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
 
   const tabContent = contentOverride ?? defaultTabContent;
 
+  const pageHeading = pageTitle ?? "Link Collection";
+  const ogTitleValue = ogTitle ?? pageHeading;
+  const ogImageValue = ogImagePath ?? "/ogp/links.svg";
+  const canonicalPathValue = canonicalPath ?? `/${activeTab}`;
+
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${pageTitle ?? "Link Collection"}</title>
+  <title>${pageHeading}</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="CamTerm" />
+  <meta property="og:title" content="${escapeHtml(ogTitleValue)}" />
+  <meta property="og:description" content="かめりあんのターミナル風Webサイト" />
+  <meta property="og:image" content="${escapeHtml(ogImageValue)}" />
+  <meta property="og:url" content="${escapeHtml(canonicalPathValue)}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapeHtml(ogTitleValue)}" />
+  <meta name="twitter:description" content="かめりあんのターミナル風Webサイト" />
+  <meta name="twitter:image" content="${escapeHtml(ogImageValue)}" />
+  <meta name="author" content="かめりあん" />
   <link rel="icon" type="image/png" href="/icon.png" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
@@ -723,7 +785,14 @@ const renderPage = (activeTab: TabKind, contentOverride?: string, pageTitle?: st
 const renderArticlePage = (slug: string): string => {
   const article = loadArticleHtmlBySlug(slug);
   const pageTitle = article ? `${article.title} | articles` : "articles";
-  return renderPage("articles", renderArticlesWorkspace(slug), pageTitle);
+  return renderPage(
+    "articles",
+    renderArticlesWorkspace(slug),
+    pageTitle,
+    article ? article.title : "articles",
+    `/ogp/articles/${encodeURIComponent(slug)}.svg`,
+    `/articles/${encodeURIComponent(slug)}`
+  );
 };
 
 const serveFile = (res: ServerResponse, filePath: string, contentType: string) => {
@@ -746,7 +815,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
     return;
   }
 
-  if (requestPath === "/icon.png") {
+  if (requestPath === "/icon.png" || requestPath === "/public.icon") {
     serveBinaryFile(res, profilePath, "image/png");
     return;
   }
@@ -759,19 +828,56 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
   if (requestPath === "/links") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderPage("links"));
+    res.end(renderPage("links", undefined, "links", "リンク置き場", "/ogp/links.svg", "/links"));
     return;
   }
 
   if (requestPath === "/articles") {
+    const firstArticle = getArticleMetas()[0];
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderPage("articles"));
+    res.end(
+      renderPage(
+        "articles",
+        undefined,
+        "articles",
+        firstArticle ? firstArticle.title : "articles",
+        "/ogp/articles.svg",
+        "/articles"
+      )
+    );
     return;
   }
 
   if (requestPath === "/photo") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderPage("photo"));
+    res.end(renderPage("photo", undefined, "photo", "写真集", "/ogp/photo.svg", "/photo"));
+    return;
+  }
+
+  if (requestPath === "/ogp/links.svg") {
+    res.writeHead(200, { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(renderOgpCardSvg("リンク置き場"));
+    return;
+  }
+
+  if (requestPath === "/ogp/photo.svg") {
+    res.writeHead(200, { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(renderOgpCardSvg("写真集"));
+    return;
+  }
+
+  if (requestPath === "/ogp/articles.svg") {
+    const firstArticle = getArticleMetas()[0];
+    res.writeHead(200, { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(renderOgpCardSvg(firstArticle ? firstArticle.title : "articles"));
+    return;
+  }
+
+  const articleOgpMatch = requestPath.match(/^\/ogp\/articles\/([a-zA-Z0-9_-]+)\.svg$/);
+  if (articleOgpMatch) {
+    const article = loadArticleHtmlBySlug(articleOgpMatch[1]);
+    res.writeHead(200, { "Content-Type": "image/svg+xml; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(renderOgpCardSvg(article ? article.title : "articles"));
     return;
   }
 
