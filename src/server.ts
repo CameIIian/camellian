@@ -737,6 +737,8 @@ const renderPage = (
           </p>
         </div>
       </section>
+      <p class="prompt">visitor@camellian:~$ ls</p>  
+      articles  photo
       <p class="prompt">visitor@camellian:~$ cat contributions</p>
       ${contributionsContent}
       <p class="prompt">visitor@camellian:~$ _</p>`
@@ -764,12 +766,12 @@ const renderPage = (
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="CamTerm" />
   <meta property="og:title" content="${escapeHtml(ogTitleValue)}" />
-  <meta property="og:description" content="かめりあんのターミナル風Webサイト" />
+  <meta property="og:description" content="camellian's website" />
   <meta property="og:image" content="${escapeHtml(ogImageValue)}" />
   <meta property="og:url" content="${escapeHtml(canonicalPathValue)}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(ogTitleValue)}" />
-  <meta name="twitter:description" content="かめりあんのターミナル風Webサイト" />
+  <meta name="twitter:description" content="camellian's website" />
   <meta name="twitter:image" content="${escapeHtml(ogImageValue)}" />
   <meta name="author" content="かめりあん" />
   <link rel="icon" type="image/png" href="/icon.png" />
