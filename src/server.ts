@@ -113,6 +113,11 @@ const markdownToHtml = (markdown: string): string => {
     }
   };
 
+  const renderCodeBlock = (source: string): string => {
+    const escapedCode = escapeHtml(source);
+    return `<div class="code-block"><button type="button" class="code-copy-button" aria-label="コードをコピー">Copy</button><pre><code>${escapedCode}</code></pre></div>`;
+  };
+
   lines.forEach((rawLine) => {
     const line = rawLine.trimEnd();
 
@@ -125,7 +130,7 @@ const markdownToHtml = (markdown: string): string => {
 
     if (line.startsWith("```") && inCodeBlock) {
       inCodeBlock = false;
-      blocks.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+      blocks.push(renderCodeBlock(codeLines.join("\n")));
       codeLines = [];
       return;
     }
@@ -180,7 +185,7 @@ const markdownToHtml = (markdown: string): string => {
   closeList();
 
   if (inCodeBlock) {
-    blocks.push(`<pre><code>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+    blocks.push(renderCodeBlock(codeLines.join("\n")));
   }
 
   return blocks.join("\n");
@@ -405,6 +410,7 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
         const tagButtons = Array.from(document.querySelectorAll(".article-filter-tag"));
         const articleItems = Array.from(document.querySelectorAll(".article-nav-item"));
         const summary = document.querySelector("#article-filter-summary");
+        const codeCopyButtons = Array.from(document.querySelectorAll(".code-copy-button"));
 
         const closeSidebar = () => {
           if (!workspace || !menuToggleButton) {
@@ -448,6 +454,39 @@ const renderArticlesWorkspace = (selectedSlug?: string): string => {
             }
           });
         }
+
+        const setupCopyButtons = () => {
+          if (codeCopyButtons.length === 0) {
+            return;
+          }
+
+          codeCopyButtons.forEach((button) => {
+            button.addEventListener("click", async () => {
+              const block = button.closest(".code-block");
+              const codeElement = block ? block.querySelector("code") : null;
+              const codeText = codeElement ? codeElement.textContent ?? "" : "";
+
+              if (!codeText) {
+                return;
+              }
+
+              try {
+                await navigator.clipboard.writeText(codeText);
+                button.textContent = "Copied!";
+                button.classList.add("is-copied");
+              } catch (_error) {
+                button.textContent = "Failed";
+              }
+
+              window.setTimeout(() => {
+                button.textContent = "Copy";
+                button.classList.remove("is-copied");
+              }, 1400);
+            });
+          });
+        };
+
+        setupCopyButtons();
 
         if (!searchInput || tagButtons.length === 0 || articleItems.length === 0 || !summary) {
           return;
