@@ -11,6 +11,7 @@ type ServerResponse = {
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
 const { links } = require("./links");
 
 const port = Number(process.env.PORT ?? 3000);
@@ -19,6 +20,7 @@ const stylesPath = path.resolve(__dirname, "../public/styles.css");
 const profilePath = path.resolve(__dirname, "../public/icon.png");
 const articlesDirPath = path.resolve(__dirname, "../resources/articles");
 const picturesDirPath = path.resolve(__dirname, "../resources/pictures");
+const repoRootPath = path.resolve(__dirname, "..");
 
 type TabKind = "links" | "articles" | "photo";
 
@@ -184,6 +186,27 @@ const markdownToHtml = (markdown: string): string => {
   return blocks.join("\n");
 };
 
+const getGitLastModifiedAt = (absoluteFilePath: string): number | null => {
+  const relativeFilePath = path.relative(repoRootPath, absoluteFilePath);
+
+  if (relativeFilePath.startsWith("..")) {
+    return null;
+  }
+
+  try {
+    const timestamp = execFileSync("git", ["log", "-1", "--format=%ct", "--", relativeFilePath], {
+      cwd: repoRootPath,
+      encoding: "utf-8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+
+    const unixSeconds = Number(timestamp);
+    return Number.isFinite(unixSeconds) && unixSeconds > 0 ? unixSeconds * 1000 : null;
+  } catch (_error) {
+    return null;
+  }
+};
+
 const getArticleMetas = (): ArticleMeta[] => {
   if (!fs.existsSync(articlesDirPath)) {
     return [];
@@ -203,6 +226,7 @@ const getArticleMetas = (): ArticleMeta[] => {
       const title = firstHeading ? firstHeading.slice(2).trim() : fileName.replace(/\.md$/, "");
       const slug = fileName.replace(/\.md$/, "");
       const stats = fs.statSync(articlePath);
+      const gitLastModifiedAt = getGitLastModifiedAt(articlePath);
       const tagsLine = source
         .split(/\r?\n/)
         .map((line: string) => line.trim())
@@ -220,7 +244,7 @@ const getArticleMetas = (): ArticleMeta[] => {
         slug,
         title,
         fileName,
-        updatedAt: stats.mtimeMs,
+        updatedAt: gitLastModifiedAt ?? stats.mtimeMs,
         tags,
       };
     })
