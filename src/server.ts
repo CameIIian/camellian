@@ -621,6 +621,10 @@ const renderPhotoWorkspace = (): string => {
 
 const renderOgpCardSvg = (title: string): string => {
   const safeTitle = escapeXml(title);
+  const iconPath = profilePath;
+  const iconDataUri = fs.existsSync(iconPath)
+    ? `data:image/png;base64,${fs.readFileSync(iconPath).toString("base64")}`
+    : "";
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${safeTitle}">
@@ -644,10 +648,25 @@ const renderOgpCardSvg = (title: string): string => {
   <text x="92" y="190" fill="#50fa7b" font-size="28" font-family="JetBrains Mono, Fira Code, Consolas, monospace">visitor@camellian:~$ open-page</text>
   <text x="92" y="268" fill="#f8f8f2" font-size="70" font-weight="700" font-family="\"Noto Sans JP\", \"Hiragino Kaku Gothic ProN\", sans-serif">${safeTitle}</text>
   <rect x="88" y="492" width="56" height="56" rx="12" fill="#282a36" stroke="#6272a4" />
-  <image href="/public.icon" x="92" y="496" width="48" height="48" preserveAspectRatio="xMidYMid slice" />
+  <image href="${iconDataUri}" x="92" y="496" width="48" height="48" preserveAspectRatio="xMidYMid slice" />
   <text x="162" y="528" fill="#8be9fd" font-size="34" font-family="JetBrains Mono, Fira Code, Consolas, monospace">かめりあん</text>
   <text x="930" y="528" fill="#bd93f9" font-size="26" font-family="JetBrains Mono, Fira Code, Consolas, monospace">Dracula Terminal</text>
 </svg>`;
+};
+
+const getOriginFromRequest = (req: IncomingMessage): string => {
+  const forwardedProto = req.headers?.["x-forwarded-proto"];
+  const proto = Array.isArray(forwardedProto) ? forwardedProto[0] : forwardedProto;
+  const protocol = proto && /^https?$/i.test(proto) ? proto.toLowerCase() : "http";
+
+  const forwardedHost = req.headers?.["x-forwarded-host"];
+  const hostHeader = req.headers?.host;
+  const host =
+    (Array.isArray(forwardedHost) ? forwardedHost[0] : forwardedHost) ||
+    (Array.isArray(hostHeader) ? hostHeader[0] : hostHeader) ||
+    `localhost:${port}`;
+
+  return `${protocol}://${host}`;
 };
 
 const renderPage = (
@@ -782,7 +801,7 @@ const renderPage = (
 </html>`;
 };
 
-const renderArticlePage = (slug: string): string => {
+const renderArticlePage = (slug: string, origin: string): string => {
   const article = loadArticleHtmlBySlug(slug);
   const pageTitle = article ? `${article.title} | articles` : "articles";
   return renderPage(
@@ -790,8 +809,8 @@ const renderArticlePage = (slug: string): string => {
     renderArticlesWorkspace(slug),
     pageTitle,
     article ? article.title : "articles",
-    `/ogp/articles/${encodeURIComponent(slug)}.svg`,
-    `/articles/${encodeURIComponent(slug)}`
+    `${origin}/ogp/articles/${encodeURIComponent(slug)}.svg`,
+    `${origin}/articles/${encodeURIComponent(slug)}`
   );
 };
 
@@ -809,6 +828,7 @@ const serveBinaryFile = (res: ServerResponse, filePath: string, contentType: str
 
 const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
   const requestPath = (req.url ?? "").split("?")[0];
+  const origin = getOriginFromRequest(req);
 
   if (requestPath === "/styles.css") {
     serveFile(res, stylesPath, "text/css; charset=utf-8");
@@ -828,7 +848,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
   if (requestPath === "/links") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderPage("links", undefined, "links", "リンク置き場", "/ogp/links.svg", "/links"));
+    res.end(renderPage("links", undefined, "links", "リンク置き場", `${origin}/ogp/links.svg`, `${origin}/links`));
     return;
   }
 
@@ -841,8 +861,8 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
         undefined,
         "articles",
         firstArticle ? firstArticle.title : "articles",
-        "/ogp/articles.svg",
-        "/articles"
+        `${origin}/ogp/articles.svg`,
+        `${origin}/articles`
       )
     );
     return;
@@ -850,7 +870,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
   if (requestPath === "/photo") {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderPage("photo", undefined, "photo", "写真集", "/ogp/photo.svg", "/photo"));
+    res.end(renderPage("photo", undefined, "photo", "写真集", `${origin}/ogp/photo.svg`, `${origin}/photo`));
     return;
   }
 
@@ -906,7 +926,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
   const articleMatch = requestPath.match(/^\/articles\/([a-zA-Z0-9_-]+)$/);
   if (articleMatch) {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(renderArticlePage(articleMatch[1]));
+    res.end(renderArticlePage(articleMatch[1], origin));
     return;
   }
 
