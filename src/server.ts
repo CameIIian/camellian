@@ -212,6 +212,41 @@ const getGitLastModifiedAt = (absoluteFilePath: string): number | null => {
   }
 };
 
+const parseArticleDateFromMarkdown = (markdown: string): number | null => {
+  const datePattern = /^\s*(?:date\s*:\s*)?(\d{4}\/\d{2}\/\d{2})\s*$/im;
+  const match = markdown.match(datePattern);
+
+  if (!match) {
+    return null;
+  }
+
+  const [yearText, monthText, dayText] = match[1].split("/");
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) {
+    return null;
+  }
+
+  if (month < 1 || month > 12 || day < 1 || day > 31) {
+    return null;
+  }
+
+  const parsed = new Date(year, month - 1, day);
+
+  if (
+    Number.isNaN(parsed.getTime()) ||
+    parsed.getFullYear() !== year ||
+    parsed.getMonth() !== month - 1 ||
+    parsed.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return parsed.getTime();
+};
+
 const getArticleMetas = (): ArticleMeta[] => {
   if (!fs.existsSync(articlesDirPath)) {
     return [];
@@ -231,6 +266,7 @@ const getArticleMetas = (): ArticleMeta[] => {
       const title = firstHeading ? firstHeading.slice(2).trim() : fileName.replace(/\.md$/, "");
       const slug = fileName.replace(/\.md$/, "");
       const stats = fs.statSync(articlePath);
+      const markdownDate = parseArticleDateFromMarkdown(source);
       const gitLastModifiedAt = getGitLastModifiedAt(articlePath);
       const tagsLine = source
         .split(/\r?\n/)
@@ -249,7 +285,7 @@ const getArticleMetas = (): ArticleMeta[] => {
         slug,
         title,
         fileName,
-        updatedAt: gitLastModifiedAt ?? stats.mtimeMs,
+        updatedAt: markdownDate ?? gitLastModifiedAt ?? stats.mtimeMs,
         tags,
       };
     })
@@ -292,8 +328,9 @@ const loadArticleHtmlBySlug = (slug: string): { title: string; html: string } | 
 
 const formatUpdatedAt = (updatedAt: number): string =>
   new Intl.DateTimeFormat("ja-JP", {
-    dateStyle: "medium",
-    timeStyle: "short",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   }).format(new Date(updatedAt));
 
 const getGithubUsername = (): string | null => {
