@@ -491,6 +491,40 @@ strong {
   max-width: 100%;
 }
 
+.markdown-article .code-block {
+  position: relative;
+  margin: 0 0 12px;
+}
+
+.markdown-article .code-block pre {
+  margin: 0;
+  padding-top: 40px;
+}
+
+.code-copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid rgba(139, 233, 253, 0.45);
+  border-radius: 999px;
+  background: rgba(31, 33, 48, 0.95);
+  color: var(--cyan);
+  font: inherit;
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+
+.code-copy-button:hover {
+  color: var(--yellow);
+  border-color: rgba(241, 250, 140, 0.55);
+}
+
+.code-copy-button.is-copied {
+  color: var(--green);
+  border-color: rgba(80, 250, 123, 0.6);
+}
+
 .markdown-article code {
   font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
   background: rgba(68, 71, 90, 0.55);
