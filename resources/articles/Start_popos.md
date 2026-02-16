@@ -1,6 +1,6 @@
 # 始めまして、Pop_OS!
 Tag: Linux, VRChat
-date: 3000/9/15
+date: 3000/09/15
 
 # 1. install
 Rufus等でインストールメディアを作る
