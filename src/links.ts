@@ -25,6 +25,12 @@ export const links: LinkItem[] = [
     description: "電子物置, 役に立ったり立たなかったりするものがある"
   },
   {
+    icon: "📔",
+    name: "hugging face",
+    url: "http://huggingface.co/camellian",
+    description: "自分でFTしたモデル置き場"
+  },
+  {
     icon: "▶",
     name: "YouTube",
     url: "https://www.youtube.com/@camellian_archive/videos",
