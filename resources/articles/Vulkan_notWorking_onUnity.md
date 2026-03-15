@@ -99,6 +99,8 @@ sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=
 sudo update-grub
 sudo efibootmgr -c -d /dev/nvme0n1 -p 3 -L "Pop!_OS" -l '\EFI\pop\grubx64.efi'
 sudo cp /boot/efi/EFI/pop/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+sudo bootctl install
+sudo kernelstub -v
 ```
 - 2環境の管理
 ```sh
