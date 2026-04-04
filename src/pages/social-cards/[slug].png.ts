@@ -8,11 +8,34 @@ import path from 'path'
 import fs from 'fs'
 import type { ReactNode } from 'react'
 
-// Load the font file as binary data
-const fontPath = path.resolve(
+const readFontIfExists = (fontPath: string) => {
+  if (!fs.existsSync(fontPath)) {
+    return undefined
+  }
+
+  return fs.readFileSync(fontPath)
+}
+
+// Primary font
+const jetBrainsMonoPath = path.resolve(
   './node_modules/@expo-google-fonts/jetbrains-mono/400Regular/JetBrainsMono_400Regular.ttf',
 )
-const fontData = fs.readFileSync(fontPath) // Reads the file as a Buffer
+const jetBrainsMonoData = fs.readFileSync(jetBrainsMonoPath)
+
+// Fallback candidates for Japanese glyphs (if available in the environment/repo)
+const japaneseFallbackCandidates = [
+  path.resolve('./src/assets/fonts/NotoSansJP-Regular.ttf'),
+  path.resolve('./public/fonts/NotoSansJP-Regular.ttf'),
+  '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+  '/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc',
+]
+
+const japaneseFallbackPath = japaneseFallbackCandidates.find((candidate) =>
+  fs.existsSync(candidate),
+)
+const japaneseFallbackData = japaneseFallbackPath
+  ? readFontIfExists(japaneseFallbackPath)
+  : undefined
 
 const avatarPath = path.resolve(siteConfig.socialCardAvatarImage)
 let avatarData: Buffer | undefined
@@ -43,22 +66,83 @@ if (!bg || !fg || !accent) {
   throw new Error(`Theme ${defaultTheme} does not have required colors`)
 }
 
+const googleFontCache = new Map<string, ArrayBuffer>()
+
+const loadGoogleNotoSansJpForSegment = async (segment: string) => {
+  if (!segment.trim()) {
+    return undefined
+  }
+
+  if (googleFontCache.has(segment)) {
+    return googleFontCache.get(segment)
+  }
+
+  const cssUrl = `https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&text=${encodeURIComponent(segment)}`
+  const cssResponse = await fetch(cssUrl, {
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+    },
+  })
+
+  if (!cssResponse.ok) {
+    return undefined
+  }
+
+  const css = await cssResponse.text()
+  const fontUrlMatch = css.match(/src:\s*url\(([^)]+)\)\s*format\('(woff2|woff|opentype|truetype)'\)/)
+  if (!fontUrlMatch) {
+    return undefined
+  }
+
+  const fontUrl = fontUrlMatch[1]?.replaceAll('"', '')
+  if (!fontUrl) {
+    return undefined
+  }
+
+  const fontResponse = await fetch(fontUrl)
+  if (!fontResponse.ok) {
+    return undefined
+  }
+
+  const fontData = await fontResponse.arrayBuffer()
+  googleFontCache.set(segment, fontData)
+  return fontData
+}
+
 const ogOptions: SatoriOptions = {
   // debug: true,
   fonts: [
     {
-      data: fontData,
+      data: jetBrainsMonoData,
       name: 'JetBrains Mono',
       style: 'normal',
       weight: 400,
     },
+    ...(japaneseFallbackData
+      ? [
+          {
+            data: japaneseFallbackData,
+            name: 'Noto Sans JP',
+            style: 'normal' as const,
+            weight: 400,
+          },
+        ]
+      : []),
   ],
+  loadAdditionalAsset: async (code, segment) => {
+    if (code !== 'ja') {
+      return undefined
+    }
+
+    return loadGoogleNotoSansJpForSegment(segment)
+  },
   height: 630,
   width: 1200,
 }
 
 const markup = (title: string, pubDate: string | undefined, author: string) =>
-  html(`<div tw="flex flex-col max-w-full justify-center h-full bg-[${bg}] text-[${fg}] p-12">
+  html(`<div style="font-family: 'JetBrains Mono', 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;" tw="flex flex-col max-w-full justify-center h-full bg-[${bg}] text-[${fg}] p-12">
     <div style="border-width: 12px; border-radius: 80px;" tw="flex items-center max-w-full p-8 border-[${accent}]/30">
       ${
         avatarBase64
