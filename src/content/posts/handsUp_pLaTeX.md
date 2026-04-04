@@ -1,7 +1,7 @@
 ---
 title: pLaTeXを使ってみよう
 published: 2025-12-17
-draft: true
+draft: false
 description: 卒論用にTeX環境を構築した際のメモ
 tags:
   - linux

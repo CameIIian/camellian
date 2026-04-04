@@ -1,7 +1,7 @@
 ---
 title: AOSPで遊ぼ
 published: 2026-01-02
-draft: true
+draft: false
 description: 旧端末に色んなAOSPを入れて遊ぶ
 tags:
   - Android
