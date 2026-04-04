@@ -1,0 +1,37 @@
+{
+  "collections": [
+    {
+      "hasSchema": true,
+      "name": "addendum"
+    },
+    {
+      "hasSchema": true,
+      "name": "home"
+    },
+    {
+      "hasSchema": true,
+      "name": "posts"
+    }
+  ],
+  "entries": {
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/addendum.md": "addendum",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/home.md": "home",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/install_aosp.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_termux.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/%e9%87%8e%e8%89%afapk.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/edit_ribera.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_mofhifitter.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/making_blind-wall.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/memo_vrc.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_vibecoding.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_windows.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_minecraft-server.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_obsidian.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_popos.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_vrm.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_helix.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_platex.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/handsup_winboat.md": "posts",
+    "file:///home/yokogawa/documents/vscode/camellian/src/content/posts/usefultools.md": "posts"
+  }
+}
