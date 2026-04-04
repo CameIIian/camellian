@@ -1,7 +1,7 @@
 ---
 title: 結局Aviutlが良くてwinboatで帰ってきた話
 published: 2026-02-21
-draft: true
+draft: false
 description: Aviutl2を使うためにWinboatをインストールした際のメモ
 tags:
   - linux

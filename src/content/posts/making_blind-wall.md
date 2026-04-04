@@ -1,7 +1,7 @@
 ---
 title: Resonark用の壁を作ろう
 published: 2026-02-14
-draft: true
+draft: false
 description: 音ゲー用ブラインドウォールを作る際のメモです。利用の際は周囲の人に許可を取ること
 tags:
   - VRChat
