@@ -2,7 +2,7 @@ import type { SiteConfig } from '~/types'
 
 const config: SiteConfig = {
   // Absolute URL to the root of your published site, used for generating links and sitemaps.
-  site: 'https://multiterm.stelclementine.com',
+  site: 'https://camellian.pages.dev/',
   // The name of your site, used in the title and for SEO.
   title: 'camellian',
   // The description of your site, used for SEO and RSS feed.
@@ -172,7 +172,7 @@ const config: SiteConfig = {
   // IMPORTANT: Update giscus.json in the root of the project with your own website URL
   // If you don't want to use Giscus, set this to undefined.
   giscus: {
-    repo: 'stelcodes/multiterm-astro',
+    repo: 'CameIIian/camellian',
     repoId: 'R_kgDORL6Hdg',
     category: 'Announcements',
     categoryId: 'DIC_kwDORL6Hds4C5_5T',
