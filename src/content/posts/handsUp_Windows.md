@@ -44,6 +44,7 @@ winget install -e --id Gyan.FFmpeg
 winget install -e --id Python.Python.3.11
 winget install -e --id yt-dlp.yt-dlp
 winget install -e --id JanDeDobbeleer.OhMyPosh
+winget install -e --id Helix.Helix
 winget install -e --id nepnep.neofetch-win
 winget install -e --id sharkdp.fd
 winget install -e --id BurntSushi.ripgrep.GNU
@@ -142,9 +143,17 @@ cui上では基本codeのように使える
 任意のテーマ/アイコンパックを入れるとよい
 - PowershellのLanguageサーバを入れて.ps1エディタとして利用
 - Markdown Oxideを入れて.mdエディタとして利用
-## 必要に合わせて入れると良いもの
+### 4.4. VSCodeのセットアップ
+Extensionだけでも入れておく
+```
+
+```
+## 5. 必要に合わせて入れると良いもの
 - Tablacus Explorer
 	便利なファイラ、GUI
+- yazi
+	ファイラ、cui
+	`choco install yazi`
 - LocalSend
 	LAN内でデータを楽にやり取りするのに便利
 - TresGrep
@@ -154,3 +163,6 @@ cui上では基本codeのように使える
 - X-Mouse Button Control
 	マウス操作をカスタマイズするソフト
 	公式ソフトがクソなとき用
+## 6. 変えなくてもいいけど変えるもの
+背景を任意の画像に変更
+マウスカーソルを任意の画像に変更
