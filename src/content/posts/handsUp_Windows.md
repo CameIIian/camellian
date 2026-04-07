@@ -62,12 +62,12 @@ winget install -e --id Audacity.Audacity
 winget install -e --id Valve.Steam
 winget install -e --id Nvidia.GeForceExperience
 ```
-
 ### 3.2. Choco経由
 chocoはパッケージ管理システム含め全て管理者での実行が必要
 ```
 choco install vivaldi
 choco install eza
+choco install yazi
 ```
 ### 3.3. scoop経由
 ```
@@ -85,12 +85,6 @@ scoop install extras/wave-terminal
   RTX30シリーズで人気なドライバを入れとく
 - [MesloLGS NF](https://github.com/romkatv/dotfiles-public/tree/master/.local/share/fonts/NerdFonts)
 ## 4. セットアップ
-CUIをメインに書く
-
-先に右クリックを旧仕様に戻しておく(他の手段を考える必要があるかも)
-```
-reg.exe add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f /ve
-```
 ### 4.1. Powershellを使う
 `ターミナル`の設定からPowershellを使うように変更
 カラーや不透明度も必要に応じて変える (以前はUbuntuスタイルが選べた気がするがない、残念)
@@ -146,14 +140,33 @@ cui上では基本codeのように使える
 ### 4.4. VSCodeのセットアップ
 Extensionだけでも入れておく
 ```
+# extension install .ps1 for VSCode
+$desired = @(
+    "christian-kohler.path-intellisense"
+    "dracula-theme.theme-dracula"
+    "marp-team.marp-vscode"
+    "mosapride.zenkaku"
+    "ms-ceintl.vscode-language-pack-ja"
+    "oderwat.indent-rainbow"
+    "pkief.material-icon-theme"
+    "streetsidesoftware.code-spell-checker"
+)
 
+$current = code --list-extensions
+
+foreach ($ext in $desired) {
+    if ($current -notcontains $ext) {
+        code --install-extension $ext
+    }
+}
 ```
+### 4.5. PowerToysのセットアップ
+以下2つを有効化、必要なら割当を変えること
+- Advanced Paste (`super`+`shift`+`V`)
+- コマンドパレット (`super`+`alt`+`space`)
 ## 5. 必要に合わせて入れると良いもの
 - Tablacus Explorer
 	便利なファイラ、GUI
-- yazi
-	ファイラ、cui
-	`choco install yazi`
 - LocalSend
 	LAN内でデータを楽にやり取りするのに便利
 - TresGrep
