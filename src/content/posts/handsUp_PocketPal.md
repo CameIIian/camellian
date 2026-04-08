@@ -28,6 +28,7 @@ https://play.google.com/store/apps/details?id=com.pocketpalai&hl=ja
 | --------- | --------------------- | ----------------------------------- | ------------------------- | ----------------------- |
 | SD7s gen4 | 3.51 token/s          | 3.85 token/s                        | 23.58 token/s             | 6.99 token/s            |
 | SD888     | 0.65 token/s          | 5.42 token/s                        | 36.40 token/s             | 11.62 token/s           |
+
 推論性能は888が高いがSwap領域を最低限にしているため、大きいモデルでは逆転している
 ## 実用
 性能とToken/sを見た時に`Qwen3.5_0.8B_Q4_K_M`と`Qwen3.5_2B_Q4_K_M`が良さげに見えた \
@@ -56,8 +57,7 @@ repetition_penalty=1.0
 ## 展望
 bonsai-8Bはllama.cppをカスタムしてるらしく現状動かない \
 色々動くようになれば最高のモバイルローカルLLM環境になるのかもしれない
-## Appendix.
-### A. Qwen3.5-Thinkingの結果
+## Appendix A. Qwen3.5-Thinkingの結果
 ```
 [question]
 qwen3.5について教えてください
@@ -85,7 +85,7 @@ Qwen3.5 は、Qwen シリーズの最新バージョンであり、大規模言�
 [answer Qwen3.5_0.8B(Thinking)]
 Thinkingで `Wait, I need to check if this is about the model or the user` でハマって出力が得られず
 ```
-### B. Qwen3.5-NonThinkingの結果
+## Appendix B. Qwen3.5-NonThinkingの結果
 ```
 [question]
 qwen3.5について教えてください
@@ -154,7 +154,7 @@ Qwen3.5 号機は、従来の Qwen3.5 号機よりも**より強い能力**と**
 
 14.52 token/s
 ```
-### C. 設定変更後の応答
+## Appendix C. 設定変更後の応答
 ```
 [question]
 qwen3.5について教えてください
