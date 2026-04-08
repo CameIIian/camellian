@@ -29,6 +29,9 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ### 2.1. 設定の変更
 `カラーモード`をダーク
 `クリップボードの履歴`をON
+キーボードのIME設定を変更
+- `ctrl`+`space`: IME切り替え
+- `変換`, `無変換`: IME有効, IME無効
 ## 3. アプリインストール
 パッケージ検索は以下より
 [Winget](https://winget.run/), [Choco](https://community.chocolatey.org/packages), [scoop](https://scoop.sh/#/)
