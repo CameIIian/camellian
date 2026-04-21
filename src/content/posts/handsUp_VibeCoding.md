@@ -4,8 +4,8 @@ published: 2026-02-06
 draft: false
 description: 旧Blogを作ってもらった時のメモ
 tags:
-  - linux
   - Web
+  - ViveCoding
 ---
 - Vibe Coding始めて
 - TypeScript知らない、HTMLとCSSなら概形はわかる

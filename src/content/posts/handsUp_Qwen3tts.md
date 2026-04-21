@@ -8,7 +8,7 @@ tags:
   - tts
 ---
 ## 1. セットアップ
-VRAM <= 8GB ならFlashAttn無くても動くはず \
+VRAM >= 8GB ならFlashAttn無くても動くはず \
 torchは自身のQUDAバージョンによっては、urlからインストールすること
 ```
 uv init qwen3-tts

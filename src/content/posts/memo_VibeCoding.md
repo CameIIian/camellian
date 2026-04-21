@@ -4,8 +4,8 @@ published: 2026-02-06
 draft: true
 description: これはテンプレートです。
 tags:
-  - linux
   - Web
+  - ViveCoding
 ---
 Vibe Coding始めての人が色々やった軌跡
 ## 選定
