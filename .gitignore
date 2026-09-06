@@ -1,5 +1,8 @@
-dist
-node_modules
-npm-debug.log*
-
-cloudflare-dist
+/site/
+/.venv/
+/.cache/
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+.env.*

@@ -1,0 +1,68 @@
+[project]
+site_name = "Camellian"
+site_url = "https://camellian.pages.dev/"
+site_description = "各種技術情報を公開しています。"
+docs_dir = "docs"
+site_dir = "site"
+use_directory_urls = true
+extra_css = ["stylesheets/extra.css"]
+
+# navを省略するとdocs/から自動生成される。初期状態はHomeのみ。
+# 並び順を管理する場合の例: nav = [{ "Home" = "index.md" }]
+
+[project.theme]
+language = "ja"
+font = false
+features = ["content.code.copy", "content.code.annotate", "search.highlight"]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "ライトモードに切り替える"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "ダークモードに切り替える"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "システム設定に切り替える"
+
+# 0.0.59ではこのテーブルを指定すると標準拡張の一覧が置き換わる。
+# SnippetsとColumnsを追加するため、必要な標準拡張もここで保持する。
+# tablesはZensicalが常時有効にするため重複指定しない。
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+toc.permalink = true
+pymdownx.arithmatex.generic = true
+pymdownx.betterem = {}
+pymdownx.caret = {}
+pymdownx.details = {}
+pymdownx.emoji.emoji_generator = "zensical.extensions.emoji.to_svg"
+pymdownx.emoji.emoji_index = "zensical.extensions.emoji.twemoji"
+pymdownx.highlight.anchor_linenums = true
+pymdownx.highlight.line_spans = "__span"
+pymdownx.highlight.pygments_lang_class = true
+pymdownx.inlinehilite = {}
+pymdownx.keys = {}
+pymdownx.mark = {}
+pymdownx.smartsymbols = {}
+pymdownx.snippets.base_path = ["docs"]
+pymdownx.snippets.restrict_base_path = true
+pymdownx.snippets.check_paths = true
+pymdownx.snippets.url_download = false
+pymdownx.superfences.custom_fences = [{ name = "mermaid", class = "mermaid" }]
+pymdownx.tabbed.alternate_style = true
+pymdownx.tabbed.combine_header_slug = true
+pymdownx.tasklist.custom_checkbox = true
+pymdownx.tilde = {}
+pymdownx.blocks.html = {}
