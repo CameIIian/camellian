@@ -289,7 +289,8 @@ SnippetsとColumnsの追加のために必要な標準拡張も明記してい�
 | 公開分離 | 編集者文書・設定ファイルが成果物にないこと、静的配信で404になることを確認 |
 | Snippets | 公開Markdownの読み込み成功、領域外と存在しないファイルの参照失敗を確認 |
 | Git除外 | `site/`、`.venv/`、キャッシュのignoreルールを検証 |
-| GitHub・Pages実環境 | 初期ローカル検証時点では未反映。実際の公開状況はPagesのDeploymentsで確認 |
+| GitHub実環境 | 既存履歴を引き継ぎ、`main`をZensical構成へ置き換え済み |
+| Pages実環境 | 更新APIが認証エラーを返すため、設定変更と公開ビルドは未完了 |
 
 検証用ページは`docs/`へ追加していません。初期公開Markdownは`docs/index.md`の1枚です。
 数式はArithmatexによる構文処理までを確認し、MathJaxなどのレンダラー追加は使用時に行います。
@@ -297,3 +298,25 @@ SnippetsとColumnsの追加のために必要な標準拡張も明記してい�
 
 既存GitHubリポジトリの履歴を引き継ぐコミットで構成を置き換えます。
 独立した履歴の強制pushで上書きしないでください。既存リポジトリのライセンス表記はルートの`LICENSE`へ維持しています。
+
+## Pages切り替えの残作業（2026-09-06）
+
+GitHubへの置き換えは完了しています。Cloudflareの更新APIは`10000: Authentication error`を返しました。
+読み取りAPIは利用できましたが、Pages設定の更新には成功していません。
+Pagesの編集権限を持つ接続で再認証するか、Dashboardから次の設定へ変更してください。
+
+| 設定 | 確認時の値 | 変更先 |
+| --- | --- | --- |
+| Production branch | `codex/mkdocs-migration` | `main` |
+| Build command | `mkdocs build --strict` | `sh scripts/build.sh` |
+| Build output directory | `site` | `site`（変更不要） |
+| Root directory | 空欄 | 空欄（変更不要） |
+| Production deployments | 無効 | 有効 |
+| Preview deployments | 無効（none） | 有効（all） |
+| Production / Previewの環境変数 | 未設定 | `SKIP_DEPENDENCY_INSTALL=1`、`PYTHON_VERSION=3.12.11` |
+
+GitHub連携先は引き続き`CameIIian/camellian`です。Build system v3も設定済みです。
+設定後は`main`の最新コミットを対象にビルドし、本番URLを確認します。
+作業ブランチ`codex/zensical-foundation`にも新構成を配置しています。
+Previewを有効にした後のブランチへのpushで、Preview Buildも確認してください。
+この記録時点では本番・PreviewともZensicalのCloudflare Build成功は確認できていません。
