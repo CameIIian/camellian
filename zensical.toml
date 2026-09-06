@@ -1,5 +1,5 @@
 [project]
-site_name = "Camellian"
+site_name = "camellian.pages.dev"
 site_url = "https://camellian.pages.dev/"
 site_description = "各種技術情報を公開しています。"
 docs_dir = "docs"
